@@ -1,0 +1,48 @@
+[
+    {
+        "firstName": "Pavan",
+        "lastName": "Shingare",
+        "phoneNumber": "9766741377",
+        "userId": "pavans63",
+        "password": "pavans@63",
+        "degree": {
+            "bachelors": "BCS Computer Science",
+            "masters": "MCS Computer Science"
+        }
+    },
+    {
+        "firstName": "Pradip",
+        "lastName": "Shingare",
+        "phoneNumber": "7894561235",
+        "userId": "pradip30",
+        "password": "pradip@30",
+        "degree": {
+            "bachelors": "Mech Eng",
+            "masters": "M Tech"
+        }
+    },
+
+    {
+        "firstName": "Nikhil",
+        "lastName": "Shingare",
+        "phoneNumber": "7523856941",
+        "userId": "nikhil40",
+        "password": "nikhil@40",
+        "degree": {
+            "bachelors": "BCom",
+            "masters": "MCom"
+        }
+    },
+
+    {
+        "firstName": "Amit",
+        "lastName": "Shingare",
+        "phoneNumber": "9638527415",
+        "userId": "amit20",
+        "password": "amit@20",
+        "degree": {
+            "bachelors": "BCA",
+            "masters": "MCA"
+        }
+    }
+]

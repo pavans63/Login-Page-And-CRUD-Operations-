@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .add-btn {
+            background-color: #008CBA;
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Users List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>User ID</th>
+                <th>Password</th>
+                <th>Degree</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+        </tbody>
+    </table>
+    <button class="add-btn" onclick="addUser()">Add User</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = getCookie('loggedInUser');
+            if (!loggedInUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (!localStorage.getItem('users')) {
+                fetch('users.json')
+                    .then(response => response.json())
+                    .then(users => {
+                        localStorage.setItem('users', JSON.stringify(users));
+                        displayUsers(users);
+                    });
+            } else {
+                const users = JSON.parse(localStorage.getItem('users'));
+                displayUsers(users);
+            }
+        });
+
+        function displayUsers(users) {
+            const userTableBody = document.getElementById('userTableBody');
+            userTableBody.innerHTML = '';
+            users.forEach(user => {
+                const row = `
+                    <tr>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>${user.phoneNumber}</td>
+                        <td>${user.userId}</td>
+                        <td>${user.password}</td>
+                        <td>Bachelors: ${user.degree.bachelors}, Masters: ${user.degree.masters}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editUser('${user.userId}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteUser('${user.userId}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                userTableBody.innerHTML += row;
+            });
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function addUser() {
+            const firstName = prompt('Enter First Name:');
+            const lastName = prompt('Enter Last Name:');
+            const phoneNumber = prompt('Enter Phone Number:');
+            const userId = prompt('Enter User ID:');
+            const password = prompt('Enter Password:');
+            const bachelors = prompt('Enter Bachelors Degree:');
+            const masters = prompt('Enter Masters Degree:');
+
+            if (firstName && lastName && phoneNumber && userId && password) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    userId,
+                    password,
+                    degree: {
+                        bachelors,
+                        masters
+                    }
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                displayUsers(users);
+            } else {
+                alert('All fields are required!');
+            }
+        }
+
+        function editUser(userId) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.userId === userId);
+
+            if (user) {
+                user.firstName = prompt('Enter First Name:', user.firstName);
+                user.lastName = prompt('Enter Last Name:', user.lastName);
+                user.phoneNumber = prompt('Enter Phone Number:', user.phoneNumber);
+                user.password = prompt('Enter Password:', user.password);
+                user.degree.bachelors = prompt('Enter Bachelors Degree:', user.degree.bachelors);
+                user.degree.masters = prompt('Enter Masters Degree:', user.degree.masters);
+
+                localStorage.setItem('users', JSON.stringify(users));
+                displayUsers(users);
+            } else {
+                alert('User not found!');
+            }
+        }
+
+        function deleteUser(userId) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const updatedUsers = users.filter(u => u.userId !== userId);
+
+            if (updatedUsers.length !== users.length) {
+                localStorage.setItem('users', JSON.stringify(updatedUsers));
+                displayUsers(updatedUsers);
+            } else {
+                alert('User not found!');
+            }
+        }
+    </script>
+
+</body>
+</html>
